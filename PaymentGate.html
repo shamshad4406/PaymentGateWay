@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link  href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        *{
+            padding: 0%;
+            margin: 0%;
+            box-sizing: border-box;
+        }
+        #form-container{
+            border-right:2px solid #eee;
+            padding:0 10px;
+        }
+        #list{
+            padding:0 10px;
+        }
+        .box{
+            display:none;
+        }
+        .toggle{
+            display:none;
+        }
+        .model{
+            display: none;
+            position: fixed;
+            z-index:1;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(0,0,0);
+            background-color: rgb(0,0,0,0.4);
+        }
+        .model-content{
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+
+        }
+        .close{
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus{
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-2">
+        <h3 class="text-center">Created By Shamshad Ali</h3>
+        <button class="btn btn-secondary" id="paymentbtn">Select Payment Method</button>
+        <div id="methodscontainer" class="toggle mt-2">
+            <div id="box">
+                <input type="radio" value="cardForm" name="methodRadio"> <label for="cardForm">Credit/Debit Card</label>
+                <input type="radio" value="upi" name="methodRadio"> <label for="upi">UPI Number</label>
+                <input type="radio" value="others" name="methodRadio"> <label for="account">Account</label>
+            </div>
+            <hr style="border: 2px solid;">
+            <div class="row justify-content-center">
+             <div class="col-6" id="form-container">
+                <form autocomplete="off" class="box cardForm" id="cardForm">
+                    <h1>Credit /Debit Card Form</h1>
+                    <h6 id="carderror1" class="text-danger">All filed are mandatory</h6>
+                    <hr>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td colspan="2">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="cardnumber" placeholder="Enter Credit Card Number">
+                            </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="cardname" placeholder="Enter your name on Card">
+                                </div>
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group mr-3">
+                                    <input type="date" class="form-control" id="cardexpiry" disabled>
+                                </div>
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    <select class="custom-select" id="cardtype">
+                                        <option selected value="">Choose...</option>
+                                        <option value="Visa">Visa</option>
+                                        <option value="Master">Master</option>
+                                        <option value="Rupay">Rupay</option>
+                                        <option value="other">other</option>
+
+                                    </select>
+                                </div>
+
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="generatecvv('cardForm')">Generate CVV</button>
+                                </div>
+                                </td>  
+                        </tr>  
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="number" class="form-control" id="cardcvv" placeholder="Enter CVV"> 
+                                </div>
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-secondary" style="width: 100%;" onclick="formSubmit(event)">
+                                </div>
+                                </td>  
+                        </tr>    
+                    </table>
+                </form>
+                <!-------------------------------------------------------------------------- -->
+                <form autocomplete="off" class="box upi" name="upi">
+                    <h1>UPI Number</h1>
+                    <h6 id="carderror2" class="text-danger">All filed are mandatory</h6>
+                    <hr>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td colspan="2">
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="upinumber" placeholder="UPI Number">
+                            </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="upiname" placeholder="Enter your name">
+                                </div>
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2"> 
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="generatecvv('upi')">Generate CVV</button>
+                                </div>
+                                </td>  
+                        </tr>  
+                        <tr>
+                             <td colspan="2">
+                                <div class="form-group mt-3" style="width: 50%; margin: 1rem auto;">
+                                    <input type="number" class="form-control" id="upicvv" placeholder="Enter CVV"> 
+                                </div>
+                            </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-secondary" style="width: 100%;" onclick="formSubmit(event)">
+                                </div>
+                                </td>  
+                        </tr>    
+                    </table>
+                </form>
+                <form autocomplete="off" class="box others" name="others">
+                    <h1>Credit /Debit Card Form</h1>
+                    <h6 id="carderror3" class="text-danger">All filed are mandatory</h6>
+                    <hr>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td colspan="2">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="othername" placeholder="Enter Your Name">
+                            </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="othernumber" placeholder="Enter Account Number">
+                    
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="otherrenuber" placeholder="Re-Enter Account Number">
+                    
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="otherifsc" placeholder="IFSC Code">
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="otherbranch" placeholder="Branch Name">
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group mr-3">
+                                    <input type="date" class="form-control" id="cardexpiry" disabled>
+                                </div>
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="generatecvv('others')">Generate CVV</button>
+                                </div>
+                                </td>  
+                        </tr>  
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="number" class="form-control" id="othercvv" placeholder="Enter CVV"> 
+                                </div>
+                                </td>  
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                 <div class="form-group">
+                                    <input type="submit" class="btn btn-secondary" style="width: 100%;" onclick="formSubmit(event)">
+                                </div>
+                            </td>  
+                        </tr>    
+                    </table>
+                </form>
+            </div>
+            <div id="col-6" class="toggle">
+                <div style=" overflow-x: auto;" id="list">
+                    <h1>List of saved details <span id="card-error"></span></h1>
+                    <br>
+                    <table class="table" table-bordered mt-3>
+                        <tr>
+                            <th>Name</th>
+                            <th>Method Type</th>
+                            <th colspan="2">Action</th>
+                        </tr>
+                        <tr id="showdata">
+                        </tr>
+                    </table>
+                </div>
+              </div>
+            </div>
+        </div>
+     
+     <div class="model-content" id="model" style="display:none;">
+        <span onclick="closemodel()" class="close">&times;</span>
+        <p id="fullpaymentdetails"></p>
+     </div>
+    </div>
+     <script>
+       var dt_table = document.getElementById('col-6');
+        let expdate = document.getElementById('cardexpiry');
+        expdate.valueAsDate = new Date();
+       
+        document.getElementById('paymentbtn').addEventListener('click',()=>{
+            var container = document.getElementById('methodscontainer');
+            if(container.classList.contains('toggle')){
+                container.classList.remove('toggle');
+            }
+            else{
+                container.classList.add('toggle');
+            }
+        })
+        //-----------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded',() =>{
+            let redio =document.getElementsByName('methodRadio');
+            redio.forEach(elm =>{
+                elm.addEventListener('click',()=>{
+                    let elmValue =elm.getAttribute('value');
+                    let form =document.querySelector('.'+elmValue);
+                    let boxes = document.querySelectorAll('.box');
+                    boxes.forEach(box=>{
+                        if(box !==form){
+                            box.style.display ="none";
+                            dt_table.classList.remove("toggle")
+                        }
+                        else{
+                            box.style.display="block";
+                        }
+                    })
+                     console.log(boxes);
+                     console.log(elmValue);
+                })
+            })
+            //console.log(redio);
+     
+        });
+        //--------------------------------------------------------------------
+        let carderror = document.getElementById('carderror');
+        let cardnumber= document.getElementById('cardnumber');
+        let cardname= document.getElementById('cardname');
+        let upiname= document.getElementById('upiname');
+        let cardType = document.getElementById('cardtype');
+        let fullData =[];
+        let cardValue=null;
+        let cvv;
+        let upiArr =['9565214406','8874226683','9839565655'];
+        cardType.addEventListener('change',()=>{
+            cardValue = document.getElementById('cardtype').value;
+             
+        })
+        let dateObj ={};
+        function generatecvv(formType){
+            cvv =Math.floor(Math.random() * 900)+100;
+           // console.log(formType);
+          //  let value =formVerfy(formType);
+            //console.log(value);
+            if(formVerfy(formType)){
+                if(formType =='cardForm'){
+                  carderror1.classList.remove("text-danger")
+                  carderror1.classList.add("text-success")
+                  carderror1.innerText = `Successfully Validate, Your cvv is ${cvv}`
+                }
+                else if(formType == 'upi'){
+                 carderror2.classList.remove("text-danger")
+                 carderror2.classList.add("text-success")
+                 carderror2.innerText = `Successfully Validate, Your cvv is ${cvv}`
+                }
+            }
+        }
+        function formVerfy(formType){
+            var re = /^[A-Za-z]+$/;
+            if(formType == 'cardForm'){
+                if(cardnumber.value.length != 16 || re.test(cardnumber.value)){
+                carderror1.classList.add("text-danger")
+                carderror1.classList.remove("text-success")
+                carderror1.innerText = "Card Number must contains 16 numberic equal number";
+                return false;
+            }
+            else if(!isNaN(cardname.value)|| cardname.value ==="" ||!re.test(cardname.value)){
+                carderror1.classList.add("text-danger")
+                carderror1.classList.remove("text-success")
+                carderror1.innerText = "Card Name must contain letters and must not be blank !";
+                return false;
+            }
+            else if(cardValue == null){
+                carderror1.classList.add("text-danger")
+                carderror1.classList.remove("text-success")
+                carderror1.innerText = "Select Card type ";
+                return false;
+            }
+            //else return true;
+            dateObj.number= cardnumber.value;
+            dateObj.expdate=expdate.value;
+            dateObj.name = cardname.value;
+            dateObj.cardType = cardValue;
+            dateObj.methodType =formType;
+        }  
+             else if(formType == 'upi'){
+                carderror1.style.display ='none'
+                carderror3.style.display ='none'
+                let upi = +document.getElementById('upinumber').value;
+                let upiN= null;
+                console.log(upi);
+                for(let index=0; index < upiArr.length; index++){
+                    if(upi== upiArr[index]){
+                     upiN = upi;
+                     break;
+                    }
+                    else{
+                       // console.log(upiArr[index]);
+                    }
+                }
+                if(upiN == null){
+                    console.log(upiN);
+                    carderror2.classList.add("text-danger")
+                    carderror2.classList.remove("text-success")
+                    carderror2.innerHTML ="Wrong UPI Number";
+                    return false;
+                }
+                else if(!isNaN(upiname.value)|| upiname.value ==="" ||!re.test(upiname.value)){
+                carderror1.classList.add("text-danger")
+                carderror1.classList.remove("text-success")
+                carderror1.innerText = "Wrong UPI name...";
+                return false;
+            }
+
+             }
+        return true;  
+    }       
+        function formSubmit(event){
+            event.preventDefault();
+            let cardcvv = document.getElementById("cardcvv").value;
+            if(cardcvv == cvv){
+                carderror1.innerHTML="your card has been saved after cvv validation"
+                setTimeout(function(){
+                  // savedata(cardnumber.value, cardname.value,selectedCardType,cvv)
+                  savedata(dateObj);
+                  document.getElementById('cardForm').reset();
+                },2000)
+            } else{
+                carderror1.classList.add("text-danger")
+                carderror1.classList.remove("text-success")
+                carderror1.innerHTML ="Entered cvv is invalid !"
+            }
+        }
+        function savedata(obj){
+            console.log(obj);
+            fullData.push(obj);
+            var showdata =document.getElementById('showdata')
+            var element = document.createElement('tr')
+            element.innerHTML=`
+            <tr id='row-${obj.methodType}'>
+                <td>${obj.name}</td>
+                 <td>${obj.methodType}</td>
+                 <td><button class="btn btn-sm btn-secondary" id="myModel" class="model" onclick="showdetailsmodel('${obj.name}')">Full Details</button></td>
+                 <td><button class="btn btn-sm btn-secondary"  onclick="removedata(this)">Remove</button></td>
+                 </tr>
+            `
+            showdata.appendChild(element)
+        }
+        function showdetailsmodel(obj){
+            document.getElementById('model').style.display="block";
+            fullData.forEach(data=>{
+                if(data.name== obj){
+                    console.log(data);
+                    document.getElementById('fullpaymentdetails').innerHTML +=`
+                    name:${data.name},<br>
+                    number:${data.number},<br>
+                    exp-date:${data.expdate},<br>
+                    cardType:${data.cardType},<br>
+                    
+                    `
+                }
+            })
+        }
+        function closemodel(){
+            document.getElementById("model").style.display='none'
+        }
+        function removedata(elemt){
+            elemt.parentElement.parentElement.remove();
+        }
+   </script>
+</body>
+</html>
